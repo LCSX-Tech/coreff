@@ -169,6 +169,9 @@ def search_response_handle(response):
         suggestion["street"] = establishment.findall("address/addressLine")[
             0
         ].text
+        suggestion["country_id"] = establishment.find(
+            "address/country"
+        ).attrib.get("code")[:2]
         if establishment.findall("name[@type='businessname']") != []:
             suggestion["ellipro_business_name"] = establishment.findall(
                 "name[@type='businessname']"
