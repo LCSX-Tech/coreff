@@ -198,7 +198,7 @@ def parse_order(order):
     """Parse a SvcOnlineOrder request response and return a dictionary."""
     parsed_order = {}
     parsed_error = {}
-    err_element = response.find("result[@code='ERR']")
+    err_element = order.find("result[@code='ERR']")
     if err_element:
         parsed_error = {
             "major_code": err_element.findtext("majorCode"),
