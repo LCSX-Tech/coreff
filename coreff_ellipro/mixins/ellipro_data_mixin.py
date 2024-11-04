@@ -88,7 +88,14 @@ class ElliproDataMixin(models.AbstractModel):
         result = EP.search(admin, order_request, request_type)
         parsed_result, parsed_error = EP.parse_order(result)
         if parsed_error:
-            raise ValidationError("\n".join(parsed_error.values()))
+            raise ValidationError(
+                "\n".join(
+                    v
+                    for k, v in parsed_error.items()
+                    if k
+                    in ["major_message", "minor_message", "additional_info"]
+                )
+            )
         self.ellipro_order_result = parsed_result["ellipro_order_result"]
         self.ellipro_rating_score = parsed_result["ellipro_rating_score"]
         self.ellipro_rating_riskclass = parsed_result[
