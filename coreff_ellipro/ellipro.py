@@ -197,6 +197,16 @@ def search_response_handle(response):
 def parse_order(order):
     """Parse a SvcOnlineOrder request response and return a dictionary."""
     parsed_order = {}
+    parsed_error = {}
+    err_element = response.find("result[@code='ERR']")
+    if err_element:
+        parsed_error = {
+            "major_code": err_element.findtext("majorCode"),
+            "major_message": err_element.findtext("majorMessage"),
+            "minor_code": err_element.findtext("minorCode"),
+            "minor_message": err_element.findtext("minorMessage"),
+            "additional_info": err_element.findtext("additionalInfo"),
+        }
     for response in order.findall("response"):
         name = response.findall("intlReport/header/report/reportId")[0].text
         price = (
@@ -225,4 +235,4 @@ def parse_order(order):
         parsed_order["ellipro_rating_riskclass"] = (
             (4 - (ord(rating_riskclass) - 65)) / 4 * 100
         )  # * letter given goes from A for best to E for worst, converted to 0-4 scale then to %
-    return parsed_order
+    return parsed_order, parsed_error
